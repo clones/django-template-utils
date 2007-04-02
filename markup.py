@@ -90,7 +90,7 @@ class MarkupFormatter(object):
     safe mode enabled, you would add this to your Django settings
     file::
     
-        MARKUP_FILTER = ('markdown', { 'safe_mode': True }
+        MARKUP_FILTER = ('markdown', { 'safe_mode': True })
     
     The filter named in this setting does not have to be from the
     default set; as long as you register a filter of that name before

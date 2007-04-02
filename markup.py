@@ -30,6 +30,7 @@ class MarkupFormatter(object):
     Generic markup formatter which can handle multiple text-to-HTML
     conversion systems.
 
+    
     Overview
     --------
     
@@ -73,8 +74,12 @@ class MarkupFormatter(object):
     Additionally, arbitrary keyword arguments can be supplied, and
     they will be passed on to the filter function.
     
+    
+    Reading default bahavior from a Django setting
+    ----------------------------------------------
+    
     The Django setting ``MARKUP_FILTER`` can be used to specify
-    default behavior; its value should be a 2-tuple:
+    default behavior; if used, its value should be a 2-tuple:
     
         * The first element should be the name of a filter.
     

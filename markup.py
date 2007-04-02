@@ -41,6 +41,10 @@ class MarkupFormatter(object):
     HTML. The default filter set includes Markdown, reStructuredText
     and Textile, using the same names as the template filters in
     ``django.contrib.markup``.
+
+    Note that to use these filters, the appropriate modules must be
+    installed; for example, the 'restructuredtext' filter will not
+    work unless the ``docutils`` module is available on your system.
     
     To register a new filter, call the ``register`` method and pass it
     a name to use for the filter, and the filter function. For

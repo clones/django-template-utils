@@ -1,3 +1,8 @@
+"""
+Template tags which can do retrieval of content from any model.
+
+"""
+
 from django import template
 from django.db.models import get_model, Manager
 
@@ -29,8 +34,8 @@ class RetrieveObjectNode(template.Node):
 
 def do_latest_objects(parser, token):
     """
-    Retrieves the latest ``num`` objects from a given model, in that model's
-    default ordering, and stores them in a context variable.
+    Retrieves the latest ``num`` objects from a given model, in that
+    model's default ordering, and stores them in a context variable.
     
     Syntax::
     
@@ -50,8 +55,8 @@ def do_latest_objects(parser, token):
 
 def do_retrieve_object(parser, token):
     """
-    Retrieves a specific object from a given model by primary-key lookup,
-    and stores it in a context variable.
+    Retrieves a specific object from a given model by primary-key
+    lookup, and stores it in a context variable.
     
     Syntax::
     

@@ -26,19 +26,19 @@ def apply_markup_filter(text, **extra_kwargs):
     Or, to use no filtering at all::
     
         MARKUP_FILTER = (None, {})
-
+    
     If you want to supply additional keyword arguments only on one
     specific use of this function, include them in the call and they
-    will be passed along. So, for example, if you had the following
-    in your settings file::
-
+    will be passed along. So, for example, if you had the following in
+    your settings file::
+    
         MARKUP_FILTER = ('markdown', {})
-
+    
     and wanted to enable safe mode for one specific call, you could
     pass that in::
-
+    
         safe_text = apply_markup_filter(some_text, safe_mode=True)
-
+    
     The 'safe_mode=True' would be passed on to Markdown.
     
     Currently supports Textile, Markdown and reStructuredText, using

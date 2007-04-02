@@ -1,3 +1,8 @@
+"""
+A filter which can perform many types of text-to-HTML conversion.
+
+"""
+
 from django.template import Library
 from template_utils.utils import apply_markup_filter
 

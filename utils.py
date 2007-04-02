@@ -1,82 +1,149 @@
+"""
+Utilities for text-to-HTML conversion.
+
+"""
+
 from django.conf import settings
 
-def apply_markup_filter(text, **extra_kwargs):
+def textile(text, **kwargs):
+    import textile
+    if 'encoding' not in kwargs:
+        kwargs.update(encoding=settings.DEFAULT_CHARSET)
+    if 'output' not in kwargs:
+        kwargs.update(output=settings.DEFAULT_CHARSET)
+    return textile.textile(text, **kwargs)
+
+def markdown(text, **kwargs):
+    import markdown
+    return markdown.markdown(text, **kwargs)
+
+def restructuredtext(text, **kwargs):
+    from docutils import core
+    if 'settings_overrides' not in kwargs:
+        kwargs.update(settings_overrides=getattr(settings,
+                                                 "RESTRUCTUREDTEXT_FILTER_SETTINGS",
+                                                 {}))
+    parts = core.publish_parts(source=text,
+                               writer_name='html4css1',
+                               **kwargs)
+    return parts['fragment']
+
+DEFAULT_MARKUP_FILTERS = {
+    'textile': textile,
+    'markdown': markdown,
+    'restructuredtext': restructuredtext
+    }
+
+class MarkupFormatter(object):
     """
-    Applies a text-to-HTML conversion function to a piece of text and
-    returns the generated HTML.
+    Generic markup formatter which can handle multiple text-to-HTML
+    conversion systems.
+
+    Overview
+    --------
     
-    The function to use is derived from the value of the setting
-    ``MARKUP_FILTER``, which should be a 2-tuple:
+    Any programmatic method of converting plain text to HTML can be
+    supported by registering a new "filter"; the filter should be a
+    function which accepts a string as its first positional argument
+    and optional extra keyword arguments (so the filter function must
+    accept ``**kwargs``), and returns the string converted to
+    HTML. The default filter set includes Markdown, reStructuredText
+    and Textile, using the same names as the template filters in
+    ``django.contrib.markup``.
     
-        * The first element should be the name of a markup filter --
-          e.g.,"markdown" -- to apply. If no markup filter is desired,
-          set this to None.
+    To register a new filter, call the ``register`` method and pass it
+    a name to use for the filter, and the filter function. For
+    example::
     
-        * The second element should be a dictionary of keyword
-          arguments which will be passed to the markup function. If no
-          extra arguments are desired, set this to an empty
-          dictionary; some arguments may still be inferred as needed,
-          however.
+        formatter = MarkupFormatter()
+        formatter.register('my_filter', my_filter_func)
     
-    So, for example, to use Markdown with safe mode turned on (safe
-    mode removes raw HTML), put this in your settings file::
+    Instances are callable, so you can work with them like so::
     
-        MARKUP_FILTER = ('markdown', { 'safe_mode': True })
+        formatter = MarkupFormatter()
+        my_html = formatter(my_string)
     
-    Or, to use no filtering at all::
+    The filter to use is determined in either of two ways:
+
+        1. If a second positional argument is supplied when called, or
+           if the keyword argument ``filter_name`` is supplied, it
+           will be used as the name of the filter to apply.
+    
+        2. Absent an explicit argument, the filter name will be taken
+           from the ``MARKUP_FILTER`` setting in your Django settings
+           file (see below).
+    
+    Additionally, arbitrary keyword arguments can be supplied, and
+    they will be passed on to the filter function.
+    
+    The Django setting ``MARKUP_FILTER`` can be used to specify
+    default behavior; its value should be a 2-tuple:
+    
+        * The first element should be the name of a filter.
+    
+        * The second element should be a dictionary to use as keyword
+          arguments for that filter.
+    
+    So, for example, to have the default behavior apply Markdown with
+    safe mode enabled, you would add this to your Django settings
+    file::
+    
+        MARKUP_FILTER = ('markdown', { 'safe_mode': True }
+    
+    The filter named in this setting does not have to be from the
+    default set; as long as you register a filter of that name before
+    trying to use the formatter, it will work.
+    
+    To have the default behavior apply no conversion whatsoever, set
+    ``MARKUP_FILTER`` like so::
     
         MARKUP_FILTER = (None, {})
     
-    If you want to supply additional keyword arguments only on one
-    specific use of this function, include them in the call and they
-    will be passed along. So, for example, if you had the following in
-    your settings file::
     
-        MARKUP_FILTER = ('markdown', {})
+    Examples
+    --------
     
-    and wanted to enable safe mode for one specific call, you could
-    pass that in::
+    Using the default behavior, with the filter name and arguments
+    taken from the ``MARKUP_FILTER`` setting::
     
-        safe_text = apply_markup_filter(some_text, safe_mode=True)
+        formatter = MarkupFormatter()
+        my_string = 'Lorem ipsum dolor sit amet.\n\nConsectetuer adipiscing elit.'
+        my_html = formatter(my_string)
     
-    The 'safe_mode=True' would be passed on to Markdown.
+    Explicitly naming the filter to use::
     
-    Currently supports Textile, Markdown and reStructuredText, using
-    names identical to the template filters found in
-    ``django.contrib.markup``, and 'linebreaks', which simply applies
-    Django's 'linebreaks' filter and leaves all other text unchanged.
+        my_html = formatter(my_string, 'markdown')
+        my_html = formatter(my_string, filter_name='markdown')
+    
+    Passing keyword arguments::
+    
+        my_html = formatter(my_string, 'markdown', safe_mode=True)
     
     """
-    markup_func, markup_kwargs = settings.MARKUP_FILTER
-    if markup_func is None: # No processing is needed.
-        return text
+    def __init__(self):
+        self.filters = {}
+        for filter_name, filter_func in DEFAULT_MARKUP_FILTERS.iteritems():
+            self.register(filter_name, filter_func)
     
-    markup_kwargs.update(**extra_kwargs)
+    def register(self, filter_name, filter_func):
+        """
+        Registers a new filter for use.
+
+        """
+        self.filters[filter_name] = filter_func
     
-    if markup_func not in ('textile', 'markdown', 'restructuredtext', 'linebreaks'):
-        raise ValueError("'%s' is not a valid value for the first element of MARKUP_FILTER; acceptable values are 'textile', 'markdown', 'restructuredtext', 'linebreaks', and None" % markup_func)
-    
-    if markup_func == 'textile':
-        import textile
-        if 'encoding' not in markup_kwargs:
-            markup_kwargs.update(encoding=settings.DEFAULT_CHARSET)
-        if 'output' not in markup_kwargs:
-            markup_kwargs.update(output=settings.DEFAULT_CHARSET)
-        return textile.textile(text, **markup_kwargs)
-    
-    elif markup_func == 'markdown':
-        import markdown
-        return markdown.markdown(text, **markup_kwargs)
-    
-    elif markup_func == 'restructuredtext':
-        from docutils import core
-        if 'settings_overrides' not in markup_kwargs:
-            markup_kwargs.update(settings_overrides=getattr(settings, "RESTRUCTUREDTEXT_FILTER_SETTINGS", {}))
-        if 'writer_name' not in markup_kwargs:
-            markup_kwargs.update(writer_name='html4css1')
-        parts = core.publish_parts(source=text, **markup_kwargs)
-        return parts['fragment']
-    
-    elif markup_func == 'linebreaks':
-        from django.utils.html import linebreaks
-        return linebreaks(text)
+    def __call__(self, text, filter_name=None, **kwargs):
+        if filter_name is not None:
+            filter_kwargs = {}
+        else:
+            filter_name, filter_kwargs = settings.MARKUP_FILTER
+        if filter_name is None:
+            return text
+        if filter_name not in self.filters:
+            raise ValueError("'%s' is not a registered markup filter. Registered filters are: %s." % (filter_name,
+                                                                                                       ', '.join(self.filters.iterkeys())))
+        filter_func = self.filters[filter_name]
+        filter_kwargs.update(**kwargs)
+        return filter_func(text, **filter_kwargs)
+
+markup_filter = MarkupFormatter()

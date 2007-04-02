@@ -4,7 +4,7 @@ A filter which can perform many types of text-to-HTML conversion.
 """
 
 from django.template import Library
-from template_utils.utils import markup_filter
+from template_utils.markup import markup_filter
 
 def apply_markup(value):
     """

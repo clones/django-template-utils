@@ -134,6 +134,7 @@ class MarkupFormatter(object):
     def __call__(self, text, **kwargs):
         if 'filter_name' in kwargs:
             filter_name = kwargs['filter_name']
+            del kwargs['filter_name']
             filter_kwargs = {}
         else:
             from django.conf import settings

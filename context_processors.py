@@ -14,10 +14,9 @@ def settings_processor(*settings_list):
     
         my_settings_processor = settings_processor('INTERNAL_IPS', 'SITE_ID')
     
-    The function ``my_settings_processor`` would then be a valid
-    context processor which would return the values of the settings
-    ``INTERNAL_IPS`` and ``SITE_ID`` in each ``RequestContext`` in
-    which it was applied.
+    ``my_settings_processor`` would then be a valid context processor
+    which would return the values of the settings ``INTERNAL_IPS`` and
+    ``SITE_ID`` in each ``RequestContext`` in which it was applied.
     
     """
     def _processor(request):

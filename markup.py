@@ -98,6 +98,10 @@ class MarkupFormatter(object):
     
         MARKUP_FILTER = (None, {})
     
+    When the ``filter_name`` keyword argument is supplied, the
+    ``MARKUP_FILTER`` setting is ignored entirely -- neither a filter
+    name nor any keyword arguments will be read from it.
+    
     
     Examples
     --------
@@ -130,13 +134,14 @@ class MarkupFormatter(object):
     def register(self, filter_name, filter_func):
         """
         Registers a new filter for use.
-
+        
         """
         self.filters[filter_name] = filter_func
     
     def __call__(self, text, **kwargs):
         if 'filter_name' in kwargs:
             filter_name = kwargs['filter_name']
+            filter_kwargs = {}
         else:
             filter_name, filter_kwargs = settings.MARKUP_FILTER
         if filter_name is None:

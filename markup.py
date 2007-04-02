@@ -24,6 +24,7 @@ DEFAULT_MARKUP_FILTERS = {
     'restructuredtext': restructuredtext
     }
 
+
 class MarkupFormatter(object):
     """
     Generic markup formatter which can handle multiple text-to-HTML
@@ -147,5 +148,10 @@ class MarkupFormatter(object):
         filter_func = self.filters[filter_name]
         filter_kwargs.update(**kwargs)
         return filter_func(text, **filter_kwargs)
+
+
+# Unless you need to have multiple instances of MarkupFormatter lying
+# around, or want to subclass it, the easiest way to use it is to
+# import this instance.
 
 markup_filter = MarkupFormatter()

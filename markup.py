@@ -3,14 +3,8 @@ Utilities for text-to-HTML conversion.
 
 """
 
-from django.conf import settings
-
 def textile(text, **kwargs):
     import textile
-    if 'encoding' not in kwargs:
-        kwargs.update(encoding=settings.DEFAULT_CHARSET)
-    if 'output' not in kwargs:
-        kwargs.update(output=settings.DEFAULT_CHARSET)
     return textile.textile(text, **kwargs)
 
 def markdown(text, **kwargs):
@@ -19,10 +13,6 @@ def markdown(text, **kwargs):
 
 def restructuredtext(text, **kwargs):
     from docutils import core
-    if 'settings_overrides' not in kwargs:
-        kwargs.update(settings_overrides=getattr(settings,
-                                                 "RESTRUCTUREDTEXT_FILTER_SETTINGS",
-                                                 {}))
     parts = core.publish_parts(source=text,
                                writer_name='html4css1',
                                **kwargs)
@@ -100,7 +90,10 @@ class MarkupFormatter(object):
     
     When the ``filter_name`` keyword argument is supplied, the
     ``MARKUP_FILTER`` setting is ignored entirely -- neither a filter
-    name nor any keyword arguments will be read from it.
+    name nor any keyword arguments will be read from it. This means
+    that, by always supplying ``filter_name`` explicitly, it is
+    possible to use this formatter without configuring or even
+    installing Django.
     
     
     Examples
@@ -143,6 +136,7 @@ class MarkupFormatter(object):
             filter_name = kwargs['filter_name']
             filter_kwargs = {}
         else:
+            from django.conf import settings
             filter_name, filter_kwargs = settings.MARKUP_FILTER
         if filter_name is None:
             return text

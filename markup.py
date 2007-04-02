@@ -65,9 +65,8 @@ class MarkupFormatter(object):
     
     The filter to use is determined in either of two ways:
 
-        1. If a second positional argument is supplied when called, or
-           if the keyword argument ``filter_name`` is supplied, it
-           will be used as the name of the filter to apply.
+        1. If the keyword argument ``filter_name`` is supplied, it
+           will be used as the filter name.
     
         2. Absent an explicit argument, the filter name will be taken
            from the ``MARKUP_FILTER`` setting in your Django settings
@@ -112,12 +111,15 @@ class MarkupFormatter(object):
     
     Explicitly naming the filter to use::
     
-        my_html = formatter(my_string, 'markdown')
         my_html = formatter(my_string, filter_name='markdown')
     
     Passing keyword arguments::
     
-        my_html = formatter(my_string, 'markdown', safe_mode=True)
+        my_html = formatter(my_string, filter_name='markdown', safe_mode=True)
+    
+    Perform no conversion (return the text as-is)::
+    
+        my_html = formatter(my_string, filter_name=None)
     
     """
     def __init__(self):
@@ -132,9 +134,9 @@ class MarkupFormatter(object):
         """
         self.filters[filter_name] = filter_func
     
-    def __call__(self, text, filter_name=None, **kwargs):
-        if filter_name is not None:
-            filter_kwargs = {}
+    def __call__(self, text, **kwargs):
+        if 'filter_name' in kwargs:
+            filter_name = kwargs['filter_name']
         else:
             filter_name, filter_kwargs = settings.MARKUP_FILTER
         if filter_name is None:

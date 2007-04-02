@@ -33,33 +33,36 @@ class MarkupFormatter(object):
     Overview
     --------
     
-    Any programmatic method of converting plain text to HTML can be
-    supported by registering a new "filter"; the filter should be a
-    function which accepts a string as its first positional argument
-    and optional extra keyword arguments (so the filter function must
-    accept ``**kwargs``), and returns the string converted to
-    HTML. The default filter set includes Markdown, reStructuredText
-    and Textile, using the same names as the template filters in
-    ``django.contrib.markup``.
+    Conversion is handled by filter functions registered with an
+    instance; a set of default filters is provided which cover
+    Markdown, reStructuredText and Textile (though using one of these
+    requires the appropriate module to be available on your system --
+    e.g., using the reST filter requires you to have ``docutils``
+    installed).
     
-    Note that to use these filters, the appropriate modules must be
-    installed; for example, the 'restructuredtext' filter will not
-    work unless the ``docutils`` module is available on your system.
+    New filters can be added by registering them with an instance;
+    simply define a function which performs the conversion you want,
+    and use the ``register`` method to add it; ``register`` expects
+    two arguments:
     
-    To register a new filter, call the ``register`` method and pass it
-    a name to use for the filter, and the filter function. For
-    example::
+        1. The name to associate with the filter.
     
-        formatter = MarkupFormatter()
-        formatter.register('my_filter', my_filter_func)
+        2. The actual filter function.
     
-    Instances are callable, so you can work with them like so::
+    So, for example, you might define a new filter function called
+    ``my_filter``, and register it like so::
     
         formatter = MarkupFormatter()
-        my_html = formatter(my_string)
+        formatter.register('my_filter', my_filter)
     
-    The filter to use is determined in either of two ways:
-
+    Instances are callable, so applying the conversion to a string is
+    simple::
+    
+        my_html = formatter(my_string, filter_name='my_filter')
+    
+    The filter to use for conversion is determined in either of two
+    ways:
+    
         1. If the keyword argument ``filter_name`` is supplied, it
            will be used as the filter name.
     

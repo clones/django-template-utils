@@ -1,4 +1,9 @@
-from django.conf import settings
+"""
+A generic function for generating context processors, and
+a processor which adds media-specific settings to each
+``RequestContext``.
+
+"""
 
 def settings_processor(*settings_list):
     """

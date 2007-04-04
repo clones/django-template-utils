@@ -4,14 +4,27 @@ Utilities for text-to-HTML conversion.
 """
 
 def textile(text, **kwargs):
+    """
+    Applies Textile conversion to a string, and returns the HTML.
+    
+    """
     import textile
     return textile.textile(text, **kwargs)
 
 def markdown(text, **kwargs):
+    """
+    Applies Markdown conversion to a string, and returns the HTML.
+    
+    """
     import markdown
     return markdown.markdown(text, **kwargs)
 
 def restructuredtext(text, **kwargs):
+    """
+    Applies reStructuredText conversion to a string, and returns the
+    HTML.
+    
+    """
     from docutils import core
     parts = core.publish_parts(source=text,
                                writer_name='html4css1',
@@ -145,6 +158,11 @@ class MarkupFormatter(object):
         self.filters[filter_name] = filter_func
     
     def __call__(self, text, **kwargs):
+        """
+        Applies text-to-HTML conversion to a string, and returns the
+        HTML.
+        
+        """
         if 'filter_name' in kwargs:
             filter_name = kwargs['filter_name']
             del kwargs['filter_name']

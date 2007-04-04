@@ -18,6 +18,17 @@ class LatestObjectsNode(template.Node):
         return ''
 
 
+class RandomObjectsNode(template.Node):
+    def __init__(self, model, num, varname):
+        self.model, self.num, self.varname = model, num, varname
+    
+    def render(self, context):
+        self.model = get_model(*self.model.split('.'))
+        if self.model is not None:
+            context[self.varname] = self.model._default_manager.order_by('?')[:self.num]
+        return ''
+
+
 class RetrieveObjectNode(template.Node):
     def __init__(self, model, pk, varname):
         self.model, self.pk, self.varname = model, num, varname
@@ -53,6 +64,27 @@ def do_latest_objects(parser, token):
         raise template.TemplateSyntaxError("third argument to '%s' tag must be 'as'" % bits[0])
     return LatestObjectsNode(bits[1], bits[2], bits[4])
 
+def do_random_objects(parser, token):
+    """
+    Retrieves ``num`` random objects from a given model, and stores
+    them in a context variable.
+    
+    Syntax::
+    
+        {% get_random_objects [appname].[modelname] [num] as [varname] %}
+    
+    Example::
+    
+        {% get_random_objects comments.FreeComment 5 as random_comments %}
+    
+    """
+    bits = token.contents.split()
+    if len(bits) != 5:
+        raise template.TemplateSyntaxError("'%s' tag takes four arguments" % bits[0])
+    if bits [3] != 'as':
+        raise template.TemplateSyntaxError("third argument to '%s' tag must be 'as'" % bits[0])
+    return RandomObjectsNode(bits[1], bits[2], bits[4])
+
 def do_retrieve_object(parser, token):
     """
     Retrieves a specific object from a given model by primary-key
@@ -76,4 +108,5 @@ def do_retrieve_object(parser, token):
 
 register = template.Library()
 register.tag('get_latest_objects', do_latest_objects)
+register.tag('get_random_objects', do_random_objects)
 register.tag('retrieve_object', do_retrieve_object)

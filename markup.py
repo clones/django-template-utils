@@ -45,7 +45,7 @@ class MarkupFormatter(object):
 
     
     Overview
-    --------
+    ========
     
     Conversion is handled by filter functions registered with an
     instance; a set of default filters is provided which cover
@@ -89,7 +89,7 @@ class MarkupFormatter(object):
     
     
     Reading default bahavior from a Django setting
-    ----------------------------------------------
+    ==============================================
     
     The Django setting ``MARKUP_FILTER`` can be used to specify
     default behavior; if used, its value should be a 2-tuple:
@@ -123,7 +123,7 @@ class MarkupFormatter(object):
     
     
     Examples
-    --------
+    ========
     
     Using the default behavior, with the filter name and arguments
     taken from the ``MARKUP_FILTER`` setting::
@@ -184,4 +184,4 @@ class MarkupFormatter(object):
 # around, or want to subclass it, the easiest way to use it is to
 # import this instance.
 
-markup_filter = MarkupFormatter()
+formatter = MarkupFormatter()

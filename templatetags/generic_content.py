@@ -12,9 +12,9 @@ class LatestObjectsNode(template.Node):
         self.model, self.num, self.varname = model, num, varname
     
     def render(self, context):
-        self.model = get_model(*self.model.split('.'))
-        if self.model is not None:
-            context[self.varname] = self.model._default_manager.all()[:int(self.num)]
+        model = get_model(*self.model.split('.'))
+        if model is not None:
+            context[self.varname] = model._default_manager.all()[:int(self.num)]
         return ''
 
 
@@ -23,9 +23,9 @@ class RandomObjectsNode(template.Node):
         self.model, self.num, self.varname = model, num, varname
     
     def render(self, context):
-        self.model = get_model(*self.model.split('.'))
-        if self.model is not None:
-            context[self.varname] = self.model._default_manager.order_by('?')[:self.num]
+        model = get_model(*self.model.split('.'))
+        if model is not None:
+            context[self.varname] = model._default_manager.order_by('?')[:self.num]
         return ''
 
 
@@ -34,11 +34,11 @@ class RetrieveObjectNode(template.Node):
         self.model, self.pk, self.varname = model, num, varname
     
     def render(self, context):
-        self.model = get_model(*self.model.split('.'))
-        if self.model is not None:
+        model = get_model(*self.model.split('.'))
+        if model is not None:
             try:
-                context[self.varname] = self.model._default_manager.get(pk=self.pk)
-            except (AssertionError, self.model.DoesNotExist): # Bad lookup, no matching object or too many matching objects.
+                context[self.varname] = model._default_manager.get(pk=self.pk)
+            except (AssertionError, model.DoesNotExist): # Bad lookup: no matching object or too many matching objects.
                 pass
         return ''
 
@@ -50,7 +50,7 @@ def do_latest_objects(parser, token):
     
     Syntax::
     
-        {% get_latest_objects [appname].[modelname] [num] as [varname] %}
+        {% get_latest_objects [app_name].[model_name] [num] as [varname] %}
     
     Example::
     
@@ -71,7 +71,7 @@ def do_random_objects(parser, token):
     
     Syntax::
     
-        {% get_random_objects [appname].[modelname] [num] as [varname] %}
+        {% get_random_objects [app_name].[model_name] [num] as [varname] %}
     
     Example::
     
@@ -92,7 +92,7 @@ def do_retrieve_object(parser, token):
     
     Syntax::
     
-        {% retrieve_object [appname].[modelname] [pk] as [varname] %}
+        {% retrieve_object [app_name].[model_name] [pk] as [varname] %}
     
     Example::
     

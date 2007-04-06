@@ -1,3 +1,9 @@
+"""
+Template tags designed to work with applications which use comment
+moderation.
+
+"""
+
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import get_model
 from django.template import Library
@@ -8,9 +14,14 @@ from django.contrib.contenttypes.models import ContentType
 class DoPublicCommentList(object):
     """
     Retrieves comments for a particular object and stores them in a
-    context variable; the difference between this tag and Django's
-    built-in comment list tags is that this tag will only return
-    comments with ``is_public=True``.
+    context variable.
+
+    The difference between this tag and Django's built-in comment list
+    tags is that this tag will only return comments with
+    ``is_public=True``. If your application uses any sort of comment
+    moderation which sets ``is_public=False``, you'll probably want to
+    use this tag, as it makes the template logic simpler by only
+    returning approved comments.
     
     Syntax::
     

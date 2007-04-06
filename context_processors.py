@@ -29,4 +29,4 @@ def settings_processor(*settings_list):
 
 media = settings_processor('ADMIN_MEDIA_PREFIX', 'MEDIA_URL')
 media.__doc__ = """A context processor which adds the values of the settings
-``ADMIN_MEDIA_PREFIX`` and ``MEDIA_URL`` to each ``RequestContext``."""
+``ADMIN_MEDIA_PREFIX`` and ``MEDIA_URL`` to a ``RequestContext``."""

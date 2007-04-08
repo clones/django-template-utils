@@ -146,7 +146,7 @@ class MarkupFormatter(object):
     
     """
     def __init__(self):
-        self.filters = {}
+        self._filters = {}
         for filter_name, filter_func in DEFAULT_MARKUP_FILTERS.iteritems():
             self.register(filter_name, filter_func)
     
@@ -155,7 +155,7 @@ class MarkupFormatter(object):
         Registers a new filter for use.
         
         """
-        self.filters[filter_name] = filter_func
+        self._filters[filter_name] = filter_func
     
     def __call__(self, text, **kwargs):
         """
@@ -172,10 +172,10 @@ class MarkupFormatter(object):
             filter_name, filter_kwargs = settings.MARKUP_FILTER
         if filter_name is None:
             return text
-        if filter_name not in self.filters:
+        if filter_name not in self._filters:
             raise ValueError("'%s' is not a registered markup filter. Registered filters are: %s." % (filter_name,
-                                                                                                       ', '.join(self.filters.iterkeys())))
-        filter_func = self.filters[filter_name]
+                                                                                                       ', '.join(self._filters.iterkeys())))
+        filter_func = self._filters[filter_name]
         filter_kwargs.update(**kwargs)
         return filter_func(text, **filter_kwargs)
 

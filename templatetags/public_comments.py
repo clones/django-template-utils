@@ -37,21 +37,21 @@ class DoPublicCommentList(object):
     this tag retrieves instances of ``FreeComment`` (comments which do
     not require registration).
     
-    To retrieve comments in reverse order (e.g., oldest comments
+    To retrieve comments in reverse order (e.g., newest comments
     first), pass 'reversed' as an extra argument after ``varname``.
     
     So, for example, to retrieve registered comments for a flatpage
     with ``id`` 12, use like this::
     
-        {% get_public_comment_list for flatpages.FlatPage 12 as comment_list %}
+        {% get_public_comment_list for flatpages.flatpage 12 as comment_list %}
     
     To retrieve unregistered comments for the same object::
     
-        {% get_public_free_comment_list for flatpages.FlatPage 12 as comment_list %}
+        {% get_public_free_comment_list for flatpages.flatpage 12 as comment_list %}
     
-    To retrieve in reverse order (oldest comments first)::
+    To retrieve in reverse order (newest comments first)::
     
-        {% get_public_free_comment_list for flatpages.FlatPage 12 as comment_list reversed %}
+        {% get_public_free_comment_list for flatpages.flatpage 12 as comment_list reversed %}
         
     """
     def __init__(self, free):
@@ -72,7 +72,7 @@ class DoPublicCommentList(object):
             raise template.TemplateSyntaxError("'%s' tag got invalid model '%s.%s'" % (bits[0], app_name, model_name))
         content_type = ContentType.objects.get_for_model(model)
         var_name, object_id = None, None
-        if tokens[3].isdigit():
+        if bits[3].isdigit():
             object_id = bits[3]
             try:
                 content_type.get_object_for_this_type(pk=obj_id)
@@ -90,6 +90,6 @@ class DoPublicCommentList(object):
             ordering = ''
         return CommentListNode(app_name, model_name, var_name, object_id, bits[5], self.free, ordering, extra_kwargs={ 'is_public__exact': True })
 
-register = template.Library()
+register = Library()
 register.tag('get_public_comment_list', DoPublicCommentList(False))
 register.tag('get_public_free_comment_list', DoPublicCommentList(True))

@@ -9,29 +9,30 @@ from django.db.models import get_model
 
 class LatestObjectsNode(template.Node):
     def __init__(self, model, num, varname):
-        self.model, self.num, self.varname = model, num, varname
+        self.model, self.num, self.varname = model, int(num), varname
     
     def render(self, context):
         model = get_model(*self.model.split('.'))
         if model is not None:
-            context[self.varname] = model._default_manager.all()[:int(self.num)]
+            context[self.varname] = list(model._default_manager.all()[:self.num])
         return ''
 
 
 class RandomObjectsNode(template.Node):
     def __init__(self, model, num, varname):
-        self.model, self.num, self.varname = model, num, varname
+        self.model, self.num, self.varname = model, int(num), varname
     
     def render(self, context):
         model = get_model(*self.model.split('.'))
+        print model
         if model is not None:
-            context[self.varname] = model._default_manager.order_by('?')[:self.num]
+            context[self.varname] = list(model._default_manager.order_by('?')[:self.num])
         return ''
 
 
 class RetrieveObjectNode(template.Node):
     def __init__(self, model, pk, varname):
-        self.model, self.pk, self.varname = model, num, varname
+        self.model, self.pk, self.varname = model, pk, varname
     
     def render(self, context):
         model = get_model(*self.model.split('.'))
@@ -54,7 +55,7 @@ def do_latest_objects(parser, token):
     
     Example::
     
-        {% get_latest_objects comments.FreeComment 5 as latest_comments %}
+        {% get_latest_objects comments.freecomment 5 as latest_comments %}
     
     """
     bits = token.contents.split()
@@ -75,7 +76,7 @@ def do_random_objects(parser, token):
     
     Example::
     
-        {% get_random_objects comments.FreeComment 5 as random_comments %}
+        {% get_random_objects comments.freecomment 5 as random_comments %}
     
     """
     bits = token.contents.split()
@@ -96,7 +97,7 @@ def do_retrieve_object(parser, token):
     
     Example::
     
-        {% retrieve_object flatpages.FlatPage 12 as my_flat_page %}
+        {% retrieve_object flatpages.flatpage 12 as my_flat_page %}
     
     """
     bits = token.contents.split()

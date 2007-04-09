@@ -37,8 +37,7 @@ class ComparisonNode(template.Node):
             }
         if result_dict[self.comparison]:
             return self.nodelist_true.render(context)
-        else:
-            return self.nodelist_false.render(context)
+        return self.nodelist_false.render(context)
 
 
 def do_comparison(parser, token):

@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.4: http://docutils.sourceforge.net/" />
+<title>Generic content retrieval</title>
+<style type="text/css">
+
+/*
+:Author: David Goodger
+:Contact: goodger@users.sourceforge.net
+:Date: $Date: 2005-12-18 01:56:14 +0100 (Sun, 18 Dec 2005) $
+:Revision: $Revision: 4224 $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin-left: 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left {
+  clear: left }
+
+img.align-right {
+  clear: right }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font-family: serif ;
+  font-size: 100% }
+
+pre.literal-block, pre.doctest-block {
+  margin-left: 2em ;
+  margin-right: 2em ;
+  background-color: #eeeeee }
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+tt.docutils {
+  background-color: #eeeeee }
+
+ul.auto-toc {
+  list-style-type: none }
+
+</style>
+</head>
+<body>
+<div class="document" id="generic-content-retrieval">
+<h1 class="title">Generic content retrieval</h1>
+<p>A common task in Django applications is writing template tags which
+retrieve particular pieces of content; for example, a weblog might
+need a &quot;get latest entries&quot; tag, while a news site would want &quot;get
+latest stories&quot;, and so on. Writing these tags to work only with
+specific models results in duplication of code across applications, so
+<tt class="docutils literal"><span class="pre">template_utils</span></tt> provides a set of template tags which can retrieve
+content from any installed model, according to certain criteria.</p>
+<p>To use these tags, you'll need to have <tt class="docutils literal"><span class="pre">template_utils</span></tt> in your
+<tt class="docutils literal"><span class="pre">INSTALLED_APPS</span></tt> list, and you'll need to have <tt class="docutils literal"><span class="pre">{%</span> <span class="pre">load</span>
+<span class="pre">generic_content</span> <span class="pre">%}</span></tt> in your template.</p>
+<div class="section">
+<h1><a id="get-latest-object" name="get-latest-object"><tt class="docutils literal"><span class="pre">get_latest_object</span></tt></a></h1>
+<p>This tag retrieves the &quot;latest&quot; object from a model, according to the
+model's default ordering.</p>
+<p>Syntax:</p>
+<pre class="literal-block">
+{% get_latest_object [app_name].[model_name] as [varname] %}
+</pre>
+<p>So, for example, to retrieve the latest <tt class="docutils literal"><span class="pre">FreeComment</span></tt> posted:</p>
+<pre class="literal-block">
+{% get_latest_object comments.freecomment as latest_comment %}
+</pre>
+</div>
+<div class="section">
+<h1><a id="get-latest-objects" name="get-latest-objects"><tt class="docutils literal"><span class="pre">get_latest_objects</span></tt></a></h1>
+<p>Similar to <tt class="docutils literal"><span class="pre">get_latest_object</span></tt>, but takes an additional argument --
+a number -- and returns a list of that many objects.</p>
+<p>Syntax:</p>
+<pre class="literal-block">
+{% get_latest_objects [app_name].[model_name] [num] as [varname] %}
+</pre>
+<p>Continuing with comments as an example:</p>
+<pre class="literal-block">
+{% get_latest_objects comments.freecomment 5 as latest_comments %}
+</pre>
+</div>
+<div class="section">
+<h1><a id="get-random-object" name="get-random-object"><tt class="docutils literal"><span class="pre">get_random_object</span></tt></a></h1>
+<p>Retrieves a single object, randomly selected, from a model.</p>
+<p>Syntax:</p>
+<pre class="literal-block">
+{% get_random_object [app_name].[model_name] as [varname] %}
+</pre>
+<p>So to retrieve a random comment:</p>
+<pre class="literal-block">
+{$ get_random_object comments.freecomment as random_comment %}
+</pre>
+</div>
+<div class="section">
+<h1><a id="get-random-objects" name="get-random-objects"><tt class="docutils literal"><span class="pre">get_random_objects</span></tt></a></h1>
+<p>Much like <tt class="docutils literal"><span class="pre">get_latest_objects</span></tt>, this tag returns a given number of
+objects (randomly selected).</p>
+<p>Syntax:</p>
+<pre class="literal-block">
+{% get_random_object [app_name].[model_name] as [varname] %}
+</pre>
+</div>
+<div class="section">
+<h1><a id="retrieve-object" name="retrieve-object"><tt class="docutils literal"><span class="pre">retrieve_object</span></tt></a></h1>
+<p>Retrieves a single specific object by primary-key lookup.</p>
+<p>Syntax:</p>
+<pre class="literal-block">
+{% retrieve_object [app_name].[model_name] [primary_key] as [varname] %}
+</pre>
+<p>For example, if you wanted to retrieve a flatpage with <tt class="docutils literal"><span class="pre">id</span></tt> 12:</p>
+<pre class="literal-block">
+{% retrieve_object flatpages.flatpage 12 as my_flatpage %}
+</pre>
+</div>
+</div>
+</body>
+</html>

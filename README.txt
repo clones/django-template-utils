@@ -3,16 +3,17 @@ Django template utilities
 =========================
 
 This is a small library of template tags and other template-related
-utilities for use with Django; while Django does a great job in
+utilities for use with Django_; while Django does a great job in
 general of helping developers avoid repetitive code, there are still a
 few things which tend to be useful or even needed in many different
 types of projects, so this application aims to genericize and bundle
 many of them into one reusable package.
 
+.. _Django: http://www.djangoproject.com/
+
 
 Downloading and installing
 ==========================
-
 
 The easiest download method is a Subversion_ checkout; all of the code
 is maintained in a Subversion repository, and checking the code out
@@ -41,7 +42,6 @@ application and use Python's ``distutils`` to install it::
     tar zxvf template_utils-0.1.tar.gz
     cd template_utils-0.1
     python setup.py install
-
 
 
 Feature overview

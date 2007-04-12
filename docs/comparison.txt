@@ -5,7 +5,7 @@ Comparison tags
 
 It's usually a bad idea to have a lot of logic in your templates, but
 occasionally there's a true presentational need for certain
-operations. Django provides an `ifequal` tag which tests equality of
+operations. Django provides an ``ifequal`` tag which tests equality of
 two values, and this tag library supplements it by providing a set of
 tags which can handle other types of comparisons.
 

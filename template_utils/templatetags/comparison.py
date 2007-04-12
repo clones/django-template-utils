@@ -1,5 +1,12 @@
 from django import template
 
+COMPARISON_DICT = {
+    'less': lambda x: x < 0,
+    'less_or_equal': lambda x: x <= 0,
+    'greater_or_equal': lambda x: x >= 0,
+    'greater': lambda x: x > 0,
+    }
+
 def resolve_variable_or_literal(path, context):
     """
     Given a string and a template context, tries to return the most
@@ -38,14 +45,8 @@ class ComparisonNode(template.Node):
         # doing the comparison.
         var1 = resolve_variable_or_literal(self.var1, context)
         var2 = resolve_variable_or_literal(self.var2, context)
-        comparison = cmp(var1, var2)
-        result_dict = {
-            'less': comparison < 0,
-            'less_or_equal': comparison <= 0,
-            'greater_or_equal': comparison >= 0,
-            'greater': comparison > 0
-            }
-        if result_dict[self.comparison]:
+        result = cmp(var1, var2)
+        if COMPARISON_DICT[self.comparison](result):
             return self.nodelist_true.render(context)
         return self.nodelist_false.render(context)
 

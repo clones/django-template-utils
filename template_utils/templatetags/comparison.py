@@ -1,5 +1,29 @@
 from django import template
 
+def resolve_variable_or_literal(path, context):
+    """
+    Given a string and a template context, tries to return the most
+    appropriate resolution of that string for that context.
+
+    Tries the following steps, in order:
+
+        1. Call ``template.resolve_variable``; if it succeeds, return
+           that value.
+
+        2. Check to see if the string is numeric; if so, return it
+           converted to an ``int``.
+
+        3. If both of the above fail, return the string as-is.
+    
+    """
+    result = None
+    try:
+        result = template.resolve_variable(path, context)
+    except template.VariableDoesNotExist:
+        if path.isdigit():
+            result = int(path)
+    return result or path
+
 
 class ComparisonNode(template.Node):
     def __init__(self, var1, var2, comparison, nodelist_true, nodelist_false):
@@ -8,26 +32,11 @@ class ComparisonNode(template.Node):
         self.nodelist_true, self.nodelist_false = nodelist_true, nodelist_false
     
     def render(self, context):
-        # Resolving the variables to compare is a bit verbose,
-        # but it has to be for this to work.
-        try:
-            # First, try to resolve as a template variable.
-            var1 = template.resolve_variable(self.var1, context)
-        except template.VariableDoesNotExist:
-            # Maybe it's a number.
-            if self.var1.isdigit():
-                var1 = int(self.var1)
-            # Not a variable or a number; keep it as-is.
-            else:
-                var1 = self.var1
-        # And now we do it all over again for the second one.
-        try:
-            var2 = template.resolve_variable(self.var2, context)
-        except template.VariableDoesNotExist:
-            if self.var2.isdigit():
-                var2 = int(self.var2)
-            else:
-                var2 = self.var2
+        # The values to compare may have been passed as template
+        # variables or as literal values, so resolve them before
+        # doing the comparison.
+        var1 = resolve_variable_or_literal(self.var1, context)
+        var2 = resolve_variable_or_literal(self.var2, context)
         comparison = cmp(var1, var2)
         result_dict = {
             'less': comparison < 0,

@@ -16,13 +16,14 @@ def resolve_variable_or_literal(path, context):
         3. If both of the above fail, return the string as-is.
     
     """
-    result = None
     try:
         result = template.resolve_variable(path, context)
     except template.VariableDoesNotExist:
         if path.isdigit():
             result = int(path)
-    return result or path
+        else:
+            result = path
+    return result
 
 
 class ComparisonNode(template.Node):

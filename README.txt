@@ -31,6 +31,19 @@ don't need to run ``manage.py syncdb`` before using it.
 .. _Subversion: http://subversion.tigris.org/
 
 
+Using ``distutils``
+-------------------
+
+Alternatively, you can download a packaged version of the entire
+application and use Python's ``distutils`` to install it::
+
+    wget http://django-template-utils.googlecode.com/files/template_utils-0.1.tar.gz
+    tar zxvf template_utils-0.1.tar.gz
+    cd template_utils-0.1
+    python setup.py install
+
+
+
 Feature overview
 ================
 
@@ -49,8 +62,8 @@ Currently, five main components are bundled into ``template_utils``:
     * A system for generating `template context processors`_ which can
       add arbitrary settings to template contexts.
 
-.. _generic content retrieval: generic_content.html
-.. _robust comparison operations: comparison.html
-.. _retrieving public comments: public_comments.html
-.. _generic text-to-HTML conversion system: markup.html
-.. _template context processors: context_processors.html
+.. _generic content retrieval: docs/generic_content.html
+.. _robust comparison operations: docs/comparison.html
+.. _retrieving public comments: docs/public_comments.html
+.. _generic text-to-HTML conversion system: docs/markup.html
+.. _template context processors: docs/context_processors.html

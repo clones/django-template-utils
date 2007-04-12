@@ -25,8 +25,8 @@ solve these problems; it is designed to allow the use of any
 text-to-HTML converter with minimal coupling of your code.
 
 
-Overview
-========
+Basic usage
+===========
 
 The ``MarkupFormatter`` class handles text-to-HTML conversion by using
 "filter functions"; by default, three filters are available:
@@ -34,10 +34,6 @@ The ``MarkupFormatter`` class handles text-to-HTML conversion by using
 systems. You can, however, enable the use of any system you like by
 writing a new filter function and registering it with an instance of
 ``MarkupFormatter``.
-
-
-Basic usage
-===========
 
 In the simplest case, converting text to HTML works by creating an
 instance of ``MarkupFormatter``, then calling it, passing a string and

@@ -78,7 +78,7 @@ template variables or literal values.
 ``if_less_or_equal``
 ====================
 
-Similar to the ``if_less`` tag, but applies a "lessthan or equal to"
+Similar to the ``if_less`` tag, but applies a "less than or equal to"
 comparison.
 
 Syntax::

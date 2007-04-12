@@ -56,7 +56,7 @@ Syntax::
 
 So to retrieve a random comment::
 
-    {$ get_random_object comments.freecomment as random_comment %}
+    {% get_random_object comments.freecomment as random_comment %}
 
 
 ``get_random_objects``

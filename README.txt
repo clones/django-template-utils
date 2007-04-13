@@ -38,9 +38,9 @@ Using ``distutils``
 Alternatively, you can download a packaged version of the entire
 application and use Python's ``distutils`` to install it::
 
-    wget http://django-template-utils.googlecode.com/files/template_utils-0.1.tar.gz
-    tar zxvf template_utils-0.1.tar.gz
-    cd template_utils-0.1
+    wget http://django-template-utils.googlecode.com/files/template_utils-0.2.tar.gz
+    tar zxvf template_utils-0.2.tar.gz
+    cd template_utils-0.2
     python setup.py install
 
 

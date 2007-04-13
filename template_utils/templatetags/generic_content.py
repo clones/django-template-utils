@@ -24,7 +24,6 @@ class RandomObjectsNode(template.Node):
     
     def render(self, context):
         model = get_model(*self.model.split('.'))
-        print model
         if model is not None:
             context[self.varname] = list(model._default_manager.order_by('?')[:self.num])
         return ''

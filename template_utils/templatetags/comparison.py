@@ -1,3 +1,8 @@
+"""
+Tags for performing basic value comparisons in templates.
+
+"""
+
 from django import template
 
 COMPARISON_DICT = {

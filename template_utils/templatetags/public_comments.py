@@ -8,11 +8,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import get_model
 from django import template
 from django.contrib.comments.models import Comment, FreeComment
-from django.contrib.comments.templatetags.comments import CommentCountNode, CommentListNode
+from django.contrib.comments.templatetags import comments
 from django.contrib.contenttypes.models import ContentType
 
 
-class PublicCommentCountNode(CommentCountNode):
+class PublicCommentCountNode(comments.CommentCountNode):
     def render(self, context):
         from django.conf import settings
         manager = self.free and FreeComment.objects or Comment.objects
@@ -27,7 +27,7 @@ class PublicCommentCountNode(CommentCountNode):
         return ''
 
 
-class DoPublicCommentList(object):
+class DoPublicCommentList(comments.DoGetCommentList):
     """
     Retrieves comments for a particular object and stores them in a
     context variable.
@@ -70,9 +70,6 @@ class DoPublicCommentList(object):
         {% get_public_free_comment_list for flatpages.flatpage 12 as comment_list reversed %}
         
     """
-    def __init__(self, free):
-        self.free = free
-
     def __call__(self, parser, token):
         bits = token.contents.split()
         if len(bits) not in (6, 7):
@@ -104,10 +101,10 @@ class DoPublicCommentList(object):
             ordering = '-'
         else:
             ordering = ''
-        return CommentListNode(app_name, model_name, var_name, object_id, bits[5], self.free, ordering, extra_kwargs={ 'is_public__exact': True })
+        return comments.CommentListNode(app_name, model_name, var_name, object_id, bits[5], self.free, ordering, extra_kwargs={ 'is_public__exact': True })
 
 
-class DoPublicCommentCount(object):
+class DoPublicCommentCount(comments.DoCommentCount):
     """
     Retrieves the number of comments attached to a particular object
     and stores them in a context variable.
@@ -138,9 +135,6 @@ class DoPublicCommentCount(object):
     not require registration).
 
     """
-    def __init__(self, free):
-        self.free = free
-
     def __call__(self, parser, token):
         bits = token.contents.split()
         if len(bits) != 6:

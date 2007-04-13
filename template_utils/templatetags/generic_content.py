@@ -68,7 +68,7 @@ def do_latest_object(parser, token):
         raise template.TemplateSyntaxError("'%s' tag takes three arguments" % bits[0])
     if bits [2] != 'as':
         raise template.TemplateSyntaxError("second argument to '%s' tag must be 'as'" % bits[0])
-    return LatestObjectsNode(bits[1], 1, bits[4])
+    return LatestObjectsNode(bits[1], 1, bits[3])
 
 def do_latest_objects(parser, token):
     """
@@ -110,7 +110,7 @@ def do_random_object(parser, token):
         raise template.TemplateSyntaxError("'%s' tag takes three arguments" % bits[0])
     if bits [2] != 'as':
         raise template.TemplateSyntaxError("second argument to '%s' tag must be 'as'" % bits[0])
-    return RandomObjectsNode(bits[1], 1, bits[4])
+    return RandomObjectsNode(bits[1], 1, bits[3])
 
 def do_random_objects(parser, token):
     """

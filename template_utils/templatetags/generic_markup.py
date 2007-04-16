@@ -39,3 +39,4 @@ def smartypants(value):
 
 register = Library()
 register.filter(apply_markup)
+register.filter(smartypants)

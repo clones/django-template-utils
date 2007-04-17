@@ -14,7 +14,7 @@ class LatestObjectsNode(template.Node):
     def render(self, context):
         model = get_model(*self.model.split('.'))
         if model is not None:
-            if num == 1:
+            if self.num == 1:
                 context[self.varname] = model._default_manager.all()[0]
             else:
                 context[self.varname] = list(model._default_manager.all()[:self.num])
@@ -28,7 +28,7 @@ class RandomObjectsNode(template.Node):
     def render(self, context):
         model = get_model(*self.model.split('.'))
         if model is not None:
-            if num == 1:
+            if self.num == 1:
                 context[self.varname] = model._default_manager.order_by('?')[0]
             else:
                 context[self.varname] = list(model._default_manager.order_by('?')[:self.num])

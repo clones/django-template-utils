@@ -4,9 +4,12 @@ typographic appeal of text on the Web.
 
 """
 
+
 from django.conf import settings
 from django.template import Library
+
 from template_utils.markup import formatter
+
 
 def apply_markup(value, arg=None):
     """

@@ -3,6 +3,7 @@ Template tags which can do retrieval of content from any model.
 
 """
 
+
 from django import template
 from django.db.models import get_model
 

@@ -5,10 +5,9 @@ moderation.
 """
 
 
+from django import template
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import get_model
-from django import template
-
 from django.contrib.comments.models import Comment, FreeComment
 from django.contrib.comments.templatetags import comments
 from django.contrib.contenttypes.models import ContentType

@@ -148,7 +148,7 @@ class DoPublicCommentCount(comments.DoCommentCount):
             raise template.TemplateSyntaxError("second argument to '%s tag must be in the format app_name.model_name'" % bits[0])
         model = get_model(app_name, model_name)
         if model is None:
-            raise template.TemplateSyntaxError("'%s' tag got invalid model '%s.%s'" % (app_name, model_name))
+            raise template.TemplateSyntaxError("'%s' tag got invalid model '%s.%s'" % (bits[0], app_name, model_name))
         content_type = ContentType.objects.get_for_model(model)
         var_name, object_id = None, None
         if bits[3].isdigit():

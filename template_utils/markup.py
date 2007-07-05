@@ -6,19 +6,16 @@ Utilities for text-to-HTML conversion.
 def textile(text, **kwargs):
     """
     Applies Textile conversion to a string, and returns the HTML.
-
-    Note that PyTextile does not handle Unicode strings correctly, so
-    this filter uses Django's ``force_unicode`` and ``smart_str``
-    utilities to roundtrip to a utf-8 bytestring and back to Unicode
-    when needed.
-
-    If you're not using Django, you'll need to supply your own Textile
-    filter with any necessary workarounds for Unicode strings.
+    
+    This is simply a pass-through to the ``textile`` template filter
+    included in ``django.contrib.markup``, which works around issues
+    PyTextile has with Unicode strings. If you're not using Django but
+    want to use Textile with ``MarkupFormatter``, you'll need to
+    supply your own Textile filter.
     
     """
-    from django.utils.encoding import smart_str, force_unicode
-    import textile
-    return force_unicode(textile.textile(smart_str(text), encoding='utf-8', output='utf-8'))
+    from django.contrib.markup.templatetags.markup import textile
+    return textile(text)
 
 def markdown(text, **kwargs):
     """

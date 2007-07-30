@@ -40,9 +40,8 @@ class GenericContentNode(template.Node):
         self.model, self.num, self.varname = model, int(num), varname
         lookup_dict = getattr(settings, 'GENERIC_CONTENT_LOOKUP_KWARGS', {})
         model = get_model(*self.model.split('.'))
-        lookup_kwargs = lookup_dict.get(self.model, {})
         if model is not None:
-            self.query_set = model._default_manager.filter(**lookup_kwargs)
+            self.query_set = model._default_manager.filter(**lookup_dict.get(self.model, {}))
         else:
             self.query_set = model
         

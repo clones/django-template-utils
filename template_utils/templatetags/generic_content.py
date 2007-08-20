@@ -71,13 +71,19 @@ class RandomObjectsNode(GenericContentNode):
 
 
 class RetrieveObjectNode(template.Node):
+    """
+    ``Node`` subclass which retrieves a single object -- by
+    primary-key lookup -- from a given model.
+
+    Because this is a primary-key lookup, it is assumed that no other
+    filtering is needed; hence, the settings-based filtering performed
+    by ``GenericContentNode`` is not used here.
+    
+    """
     def __init__(self, model, pk, varname):
         self.model, self.pk, self.varname = model, pk, varname
     
     def render(self, context):
-        # PK lookup assumes we know exactly which object we want,
-        # so the extra settings-based filtering applied in the other
-        # tags is not used here.
         model = get_model(*self.model.split('.'))
         if model is not None:
             try:

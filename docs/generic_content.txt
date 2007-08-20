@@ -82,3 +82,58 @@ Syntax::
 For example, if you wanted to retrieve a flatpage with ``id`` 12::
 
     {% retrieve_object flatpages.flatpage 12 as my_flatpage %}
+
+
+Performing additional filtering
+===============================
+
+The tags described above all use the default manager of the model
+specified in the tag call, and by default do not perform any filtering
+on the default ``QuerySet`` obtained from that manager. However, as a
+convenience for situations where it is desirable or necessary to
+filter the objects (e.g., to retrieve the latest public comments, or
+latest objects with a particular status), two mechanisms are supplied:
+one broad and one fine-grained.
+
+The broader method involves adding an extra setting to your Django
+settings file: ``GENERIC_CONTENT_LOOKU_KWARGS``. The value of this
+setting should be a dictionary with keys corresponding to names of
+models (e.g., "comments.freecomment", "auth.user", etc.) and values
+containing dictionaries of valid database lookup arguments for those
+models. When this setting exists and contains an entry for the model
+whose objects are being queried, ``get_latest_object``,
+``get_latest_objects``, ``get_random_object`` and
+``get_random_objects`` will all read the lookup arguments and apply
+them to the model's default ``QuerySet``. Because it does a
+primary-key lookup (and thus it's safe to assume you know precisely
+which object you want), ``retrieve_object`` does not filter in any
+situation.
+
+The finer-grained method involves subclassing the ``Node`` class
+common to the four tags listed above; they are all instances of
+``template_utils.templatetags.generic_content.GenericContentNode``,
+which knows how to look for and apply lookup arguments found in the
+``GENERIC_CONTENT_LOOKUP_KWARGS`` setting. Two methods on
+``GenericContentNode`` are of interest:
+
+* ``__init__`` looks up the ``GENERIC_CONTENT_LOOKUP_KWARGS`` setting
+  and reads any appropriate filtering arguments out of it. Subclassing
+  and overriding ``__init__`` allows you to custmize this behavior.
+
+* ``_get_query_set`` is responsible for supplying the actual
+  ``QuerySet`` which will be used to retrieve objects from the
+  database.
+
+When overriding ``_get_query_set``, take note that at the time it is
+called, the ``GenericContentNode`` will have an instance variable
+``queryset``; this will be either a ``QuerySet`` of the model
+specified in the tag call (with filtering applied as described above),
+or ``None`` (if the specified model did not exist; because template
+tags must fail silently, this is propagated into ``render`` so it can
+short-circuit and return nothing).
+
+The ``Node`` used for ``get_random_object`` and ``get_random_objects``
+(``RandomObjectNode``) is a useful example of this: it subclasses
+``GenericContentNode`` and overrides ``_get_query_set``, applying
+``order_by('?')`` to the ``queryset`` instane variable to obtain
+random ordering before returning the ``QuerySet``.

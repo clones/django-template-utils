@@ -29,32 +29,29 @@ class GenericContentNode(template.Node):
        passed to ``filter()``.
 
     2. Subclass and override ``_get_query_set``; all that's expected
-       is that it will return a ``QuerySet`` or ``None``; if it
-       returns a ``QuerySet``, that will be used to get the object(s)
-       to add to the template context. The default ``QuerySet`` for
-       the specified model (filtered as described above) will be
-       available as ``self.query_set`` if you want to work with it.
+       is that it will return a ``QuerySet`` which will be used to
+       retrieve the object(s) he default ``QuerySet`` for the
+       specified model (filtered as described above) will be available
+       as ``self.query_set`` if you want to work with it.
     
     """
     def __init__(self, model, num, varname):
         self.model, self.num, self.varname = model, int(num), varname
         lookup_dict = getattr(settings, 'GENERIC_CONTENT_LOOKUP_KWARGS', {})
         model = get_model(*self.model.split('.'))
-        if model is not None:
-            self.query_set = model._default_manager.filter(**lookup_dict.get(self.model, {}))
-        else:
-            self.query_set = model
+        if model is None:
+            raise template.TemplateSyntaxError("Generic content tag got invalid model: %s" % self.model)
+        self.query_set = model._default_manager.filter(**lookup_dict.get(self.model, {}))
         
     def _get_query_set(self):
         return self.query_set
     
     def render(self, context):
         query_set = self._get_query_set()
-        if query_set is not None:
-            if self.num == 1:
-                context[self.varname] = query_set[0]
-            else:
-                context[self.varname] = list(query_set[:self.num])
+        if self.num == 1:
+            context[self.varname] = query_set[0]
+        else:
+            context[self.varname] = list(query_set[:self.num])
         return ''
 
 
@@ -65,9 +62,7 @@ class RandomObjectsNode(GenericContentNode):
     
     """
     def _get_query_set(self):
-        if self.query_set is not None:
-            self.query_set = self.query_set.order_by('?')
-        return self.query_set
+        return self.query_set.order_by('?')
 
 
 class RetrieveObjectNode(template.Node):
@@ -85,11 +80,9 @@ class RetrieveObjectNode(template.Node):
     
     def render(self, context):
         model = get_model(*self.model.split('.'))
-        if model is not None:
-            try:
-                context[self.varname] = model._default_manager.get(pk=self.pk)
-            except (AssertionError, model.DoesNotExist): # Bad lookup: no matching object or too many matching objects.
-                pass
+        if model is None:
+            raise template.TemplateSyntaxError("Generic content tag got invalid model: %s" % self.model)
+        context[self.varname] = model._default_manager.get(pk=self.pk)
         return ''
 
 

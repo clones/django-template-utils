@@ -104,10 +104,19 @@ models. When this setting exists and contains an entry for the model
 whose objects are being queried, ``get_latest_object``,
 ``get_latest_objects``, ``get_random_object`` and
 ``get_random_objects`` will all read the lookup arguments and apply
-them to the model's default ``QuerySet``. Because it does a
-primary-key lookup (and thus it's safe to assume you know precisely
-which object you want), ``retrieve_object`` does not filter in any
-situation.
+them to the model's default ``QuerySet``.
+
+So, for example, if you wanted these tags to only retrieve comments
+whose ``is_public`` field is set to ``True`` (useful if you're doing
+comment moderation), you'd add this to your settings file:
+
+    GENERIC_CONTENT_LOOKUP_KWARGS = {
+        'comments.freecomment': { 'is_public__exact': True }
+    }
+
+Because it does a primary-key lookup (and thus it's safe to assume you
+know precisely which object you want), ``retrieve_object`` does not
+filter in any situation.
 
 The finer-grained method involves subclassing the ``Node`` class
 common to most of the tags listed above; they're instances of

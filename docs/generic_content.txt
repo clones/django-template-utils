@@ -135,11 +135,8 @@ which knows how to look for and apply lookup arguments found in the
 
 When overriding ``_get_query_set``, take note that at the time it is
 called, the ``GenericContentNode`` will have an instance variable
-``queryset``; this will be either a ``QuerySet`` of the model
-specified in the tag call (with filtering applied as described above),
-or ``None`` (if the specified model did not exist; because template
-tags must fail silently, this is propagated into ``render`` so it can
-short-circuit and return nothing).
+``queryset``; this will be a ``QuerySet`` of the model
+specified in the tag call (with filtering applied as described above).
 
 The ``Node`` used for ``get_random_object`` and ``get_random_objects``
 (``RandomObjectNode``) is a useful example of this: it subclasses

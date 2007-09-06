@@ -96,7 +96,7 @@ latest objects with a particular status), two mechanisms are supplied:
 one broad and one fine-grained.
 
 The broader method involves adding an extra setting to your Django
-settings file: ``GENERIC_CONTENT_LOOKU_KWARGS``. The value of this
+settings file: ``GENERIC_CONTENT_LOOKUP_KWARGS``. The value of this
 setting should be a dictionary with keys corresponding to names of
 models (e.g., "comments.freecomment", "auth.user", etc.) and values
 containing dictionaries of valid database lookup arguments for those

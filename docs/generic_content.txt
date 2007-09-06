@@ -110,7 +110,7 @@ which object you want), ``retrieve_object`` does not filter in any
 situation.
 
 The finer-grained method involves subclassing the ``Node`` class
-common to the four tags listed above; they are all instances of
+common to most of the tags listed above; they're instances of
 ``template_utils.templatetags.generic_content.GenericContentNode``,
 which knows how to look for and apply lookup arguments found in the
 ``GENERIC_CONTENT_LOOKUP_KWARGS`` setting. Two methods on

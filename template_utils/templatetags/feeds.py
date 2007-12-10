@@ -2,6 +2,9 @@
 Tags which can retrieve and parse RSS and Atom feeds, and return the
 results for use in templates.
 
+Based, in part, on the original idea by user baumer1122 and posted to
+djangosnippets at http://www.djangosnippets.org/snippets/311/
+
 """
 
 import datetime

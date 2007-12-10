@@ -22,6 +22,7 @@ def apply_markup(value, arg=None):
     if arg is not None:
         return mark_safe(formatter(value, filter_name=arg))
     return formatter(value)
+apply_markup.is_safe = True
 
 def smartypants(value):
     """
@@ -37,9 +38,9 @@ def smartypants(value):
     except ImportError:
         if settings.DEBUG:
             raise template.TemplateSyntaxError("Error in smartypants filter: the Python smartypants module is not installed or could not be imported")
-        return mark_safe(value)
+        return value
     else:
-        return mark_safe(smartyPants(value))
+        return smartyPants(value)
 
 register = Library()
 register.filter(apply_markup)

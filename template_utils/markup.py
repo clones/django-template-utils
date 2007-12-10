@@ -3,6 +3,7 @@ Utilities for text-to-HTML conversion.
 
 """
 
+
 def textile(text, **kwargs):
     """
     Applies Textile conversion to a string, and returns the HTML.
@@ -65,9 +66,9 @@ class MarkupFormatter(object):
     and use the ``register`` method to add it; ``register`` expects
     two arguments:
     
-        1. The name to associate with the filter.
+    1. The name to associate with the filter.
     
-        2. The actual filter function.
+    2. The actual filter function.
     
     So, for example, you might define a new filter function called
     ``my_filter``, and register it like so::
@@ -83,12 +84,12 @@ class MarkupFormatter(object):
     The filter to use for conversion is determined in either of two
     ways:
     
-        1. If the keyword argument ``filter_name`` is supplied, it
-           will be used as the filter name.
+    1. If the keyword argument ``filter_name`` is supplied, it will be
+       used as the filter name.
     
-        2. Absent an explicit argument, the filter name will be taken
-           from the ``MARKUP_FILTER`` setting in your Django settings
-           file (see below).
+    2. Absent an explicit argument, the filter name will be taken from
+       the ``MARKUP_FILTER`` setting in your Django settings file (see
+       below).
     
     Additionally, arbitrary keyword arguments can be supplied, and
     they will be passed on to the filter function.
@@ -100,10 +101,10 @@ class MarkupFormatter(object):
     The Django setting ``MARKUP_FILTER`` can be used to specify
     default behavior; if used, its value should be a 2-tuple:
     
-        * The first element should be the name of a filter.
+    * The first element should be the name of a filter.
     
-        * The second element should be a dictionary to use as keyword
-          arguments for that filter.
+    * The second element should be a dictionary to use as keyword
+      arguments for that filter.
     
     So, for example, to have the default behavior apply Markdown with
     safe mode enabled, you would add this to your Django settings
@@ -126,6 +127,27 @@ class MarkupFormatter(object):
     that, by always supplying ``filter_name`` explicitly, it is
     possible to use this formatter without configuring or even
     installing Django.
+
+
+    Django and template autoescaping
+    ================================
+
+    Django's template system defaults to escaping the output of
+    template variables, which can interfere with functions intended to
+    return HTML. ``MarkupFormatter`` does not in any way tamper with
+    Django's autoescaping, so pasing the results of formatting
+    directly to a Django template will result in that text being
+    escaped.
+
+    If you need to use ``MarkupFormatter`` for items which will be
+    passed to a Django template as variables, use the function
+    ``django.utils.safestring.mark_safe`` to tell Django's template
+    system not to escape that text.
+    
+    For convenience, a Django template filter is included (in
+    ``templatetags/generic_markup.py``) which applies
+    ``MarkupFormatter`` to a string and marks the result as not
+    requiring autoescaping.
     
     
     Examples
@@ -153,7 +175,7 @@ class MarkupFormatter(object):
     """
     def __init__(self):
         self._filters = {}
-        for filter_name, filter_func in DEFAULT_MARKUP_FILTERS.iteritems():
+        for filter_name, filter_func in DEFAULT_MARKUP_FILTERS.items():
             self.register(filter_name, filter_func)
     
     def register(self, filter_name, filter_func):

@@ -75,9 +75,9 @@ instance of ``MarkupFormatter``::
 
 The arguments to ``register`` are:
 
-    1. A string to use as the name of the filter.
+1. A string to use as the name of the filter.
 
-    2. The filter function.
+2. The filter function.
 
 Once the filter is registered, it can be used the same as the built-in
 filters::
@@ -102,9 +102,9 @@ default filter name and keyword arguments from the Django setting
 ``MARKUP_FILTER``; if you specify this setting, it should be a tuple
 with two elements:
 
-    1. The name of a filter to use.
+1. The name of a filter to use.
 
-    2. A dictionary of keyword arguments to pass to it.
+2. A dictionary of keyword arguments to pass to it.
 
 So to have Markdown with "safe mode" be the default behavior, you
 would add the following to your settings file::
@@ -161,3 +161,7 @@ This would have the same effect as the following Python code::
 But remember that this will override *all* use of ``MARKUP_FILTER``,
 so any custom keyword arguments you specified there will not be used
 when you pass an argument to ``apply_markup``.
+
+Also, note that on Django trunk templates automatically escape
+variable output by default; the ``apply_markup`` filter will mark its
+output as "safe" in order to avoid escaping of the generated HTML.

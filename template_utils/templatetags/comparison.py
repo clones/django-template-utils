@@ -19,19 +19,23 @@ COMPARISON_DICT = {
 
 class ComparisonNode(template.Node):
     def __init__(self, var1, var2, comparison, nodelist_true, nodelist_false):
-        self.var1, self.var2 = var1, var2
+        self.var1 = template.Variable(var1)
+        self.var2 = template.Variable(var2)
         self.comparison = comparison
         self.nodelist_true, self.nodelist_false = nodelist_true, nodelist_false
     
     def render(self, context):
-        # The values to compare may have been passed as template
-        # variables or as literal values, so resolve them before
-        # doing the comparison.
-        var1 = resolve_variable_or_literal(self.var1, context)
-        var2 = resolve_variable_or_literal(self.var2, context)
-        result = cmp(var1, var2)
-        if COMPARISON_DICT[self.comparison](result):
-            return self.nodelist_true.render(context)
+        try:
+            result = cmp(self.var1.resolve(context),
+                         self.var2.resolve(context))
+            if COMPARISON_DICT[self.comparison](result):
+                return self.nodelist_true.render(context)
+        # If either variable fails to resolve, return nothing.
+        except template.VariableDoesNotExist:
+            return ''
+        # If the types don't permit comparison, return nothing.
+        except TypeError:
+            return ''
         return self.nodelist_false.render(context)
 
 

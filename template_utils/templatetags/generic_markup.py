@@ -7,6 +7,7 @@ typographic appeal of text on the Web.
 
 from django.conf import settings
 from django.template import Library
+from django.utils.safestring import mark_safe
 
 from template_utils.markup import formatter
 
@@ -19,7 +20,7 @@ def apply_markup(value, arg=None):
     
     """
     if arg is not None:
-        return formatter(value, filter_name=arg)
+        return mark_safe(formatter(value, filter_name=arg))
     return formatter(value)
 
 def smartypants(value):
@@ -36,9 +37,9 @@ def smartypants(value):
     except ImportError:
         if settings.DEBUG:
             raise template.TemplateSyntaxError("Error in smartypants filter: the Python smartypants module is not installed or could not be imported")
-        return value
+        return mark_safe(value)
     else:
-        return smartyPants(value)
+        return mark_safe(smartyPants(value))
 
 register = Library()
 register.filter(apply_markup)

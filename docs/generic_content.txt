@@ -121,25 +121,4 @@ filter in any situation.
 The finer-grained method involves subclassing the ``Node`` class
 common to most of the tags listed above; they're instances of
 ``template_utils.templatetags.generic_content.GenericContentNode``,
-which knows how to look for and apply lookup arguments found in the
-``GENERIC_CONTENT_LOOKUP_KWARGS`` setting. Two methods on
-``GenericContentNode`` are of interest:
-
-* ``__init__`` looks up the ``GENERIC_CONTENT_LOOKUP_KWARGS`` setting
-  and reads any appropriate filtering arguments out of it. Subclassing
-  and overriding ``__init__`` allows you to custmize this behavior.
-
-* ``_get_query_set`` is responsible for supplying the actual
-  ``QuerySet`` which will be used to retrieve objects from the
-  database.
-
-When overriding ``_get_query_set``, take note that at the time it is
-called, the ``GenericContentNode`` will have an instance variable
-``queryset``; this will be a ``QuerySet`` of the model
-specified in the tag call (with filtering applied as described above).
-
-The ``Node`` used for ``get_random_object`` and ``get_random_objects``
-(``RandomObjectNode``) is a useful example of this: it subclasses
-``GenericContentNode`` and overrides ``_get_query_set``, applying
-``order_by('?')`` to the ``queryset`` instance variable to obtain
-random ordering before returning the ``QuerySet``.
+which is documented in the file ``nodes.txt`` in this directory.

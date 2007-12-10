@@ -38,9 +38,9 @@ Using ``distutils``
 Alternatively, you can download a packaged version of the entire
 application and use Python's ``distutils`` to install it::
 
-    wget http://django-template-utils.googlecode.com/files/template_utils-0.3.tar.gz
-    tar zxvf template_utils-0.3.tar.gz
-    cd template_utils-0.3
+    wget http://django-template-utils.googlecode.com/files/template_utils-0.4.tar.gz
+    tar zxvf template_utils-0.4.tar.gz
+    cd template_utils-0.4
     python setup.py install
 
 
@@ -49,21 +49,30 @@ Feature overview
 
 Currently, five main components are bundled into ``template_utils``:
 
-    * Template tags for `generic content retrieval`_.
+* Template tags for `generic content retrieval`_.
 
-    * Template tags for `robust comparison operations`_.
+* Template tags for `robust comparison operations`_.
 
-    * Template tags for `retrieving public comments`_ (for when a
-      comment-moderation system is in use).
+* Template tags for `retrieving public comments`_ (for when a
+  comment-moderation system is in use).
 
-    * A `generic text-to-HTML conversion system`_ with template filter
-      support.
+* Template tags for `retrieving and parsing RSS and Atom feeds`_
+  and displaying the results in template.
 
-    * A system for generating `template context processors`_ which can
-      add arbitrary settings to template contexts.
+* A `generic text-to-HTML conversion system`_ with template filter
+  support.
+
+* A system for generating `template context processors`_ which can
+  add arbitrary settings to template contexts.
+  
+* `Node classes`_ for simplifying some common types of custom
+  template tags.
+    
 
 .. _generic content retrieval: docs/generic_content.html
 .. _robust comparison operations: docs/comparison.html
 .. _retrieving public comments: docs/public_comments.html
+.. _retrieving and parsing RSS and Atom feeds: docs/feeds.html
 .. _generic text-to-HTML conversion system: docs/markup.html
 .. _template context processors: docs/context_processors.html
+.. _Node classes: docs/nodes.html

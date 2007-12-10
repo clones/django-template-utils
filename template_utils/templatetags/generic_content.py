@@ -5,54 +5,9 @@ Template tags which can do retrieval of content from any model.
 
 
 from django import template
-from django.conf import settings
 from django.db.models import get_model
 
-
-class GenericContentNode(template.Node):
-    """
-    Base Node class for retrieving objects from any model.
-
-    By itself, this class will retrieve a number of objects from a
-    particular model (specified by an "app_name.model_name" string)
-    and store them in a specified context variable (these are the
-    ``num``, ``model`` and ``varname`` arguments to the constructor,
-    respectively), but is also intended to be subclassed for
-    customization.
-
-    There are two ways to add extra bits to the eventual database lookup:
-
-    1. Add the setting ``GENERIC_CONTENT_LOOKUP_KWARGS`` to your
-       settings file; this should be a dictionary whose keys are
-       "app_name.model_name" strings correponding to models, and whose
-       values are dictionaries of keyword arguments which will be
-       passed to ``filter()``.
-
-    2. Subclass and override ``_get_query_set``; all that's expected
-       is that it will return a ``QuerySet`` which will be used to
-       retrieve the object(s) he default ``QuerySet`` for the
-       specified model (filtered as described above) will be available
-       as ``self.query_set`` if you want to work with it.
-    
-    """
-    def __init__(self, model, num, varname):
-        self.model, self.num, self.varname = model, int(num), varname
-        lookup_dict = getattr(settings, 'GENERIC_CONTENT_LOOKUP_KWARGS', {})
-        model = get_model(*self.model.split('.'))
-        if model is None:
-            raise template.TemplateSyntaxError("Generic content tag got invalid model: %s" % self.model)
-        self.query_set = model._default_manager.filter(**lookup_dict.get(self.model, {}))
-        
-    def _get_query_set(self):
-        return self.query_set
-    
-    def render(self, context):
-        query_set = self._get_query_set()
-        if self.num == 1:
-            context[self.varname] = query_set[0]
-        else:
-            context[self.varname] = list(query_set[:self.num])
-        return ''
+from template_utils.nodes import ContextUpdatingNode, GenericContentNode
 
 
 class RandomObjectsNode(GenericContentNode):
@@ -65,7 +20,7 @@ class RandomObjectsNode(GenericContentNode):
         return self.query_set.order_by('?')
 
 
-class RetrieveObjectNode(template.Node):
+class RetrieveObjectNode(ContextUpdatingNode):
     """
     ``Node`` subclass which retrieves a single object -- by
     primary-key lookup -- from a given model.
@@ -76,14 +31,14 @@ class RetrieveObjectNode(template.Node):
     
     """
     def __init__(self, model, pk, varname):
-        self.model, self.pk, self.varname = model, pk, varname
+        self.pk = template.Variable(pk)
+        self.varname = varname
+        self.model = get_model(*model.split('.'))
+        if self.model is None:
+            raise template.TemplateSyntaxError("Generic content tag got invalid model: %s" % model)
     
-    def render(self, context):
-        model = get_model(*self.model.split('.'))
-        if model is None:
-            raise template.TemplateSyntaxError("Generic content tag got invalid model: %s" % self.model)
-        context[self.varname] = model._default_manager.get(pk=self.pk)
-        return ''
+    def get_content(self, context):
+        return { self.varname: self.model._default_manager.get(pk=self.pk.resolve(context))}
 
 
 def do_latest_object(parser, token):

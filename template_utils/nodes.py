@@ -20,7 +20,7 @@ class ContextUpdatingNode(template.Node):
         context.update(self.get_content(context))
         return ''
 
-    def get_context(self, context):
+    def get_content(self, context):
         raise NotImplementedError
 
 

@@ -6,8 +6,6 @@ Tags for performing basic value comparisons in templates.
 
 from django import template
 
-from template_utils.utils import resolve_variable_or_literal
-
 
 COMPARISON_DICT = {
     'less': lambda x: x < 0,

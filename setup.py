@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name='template_utils',
-      version='0.4p1',
+      version='0.4p2',
       description='Template-related utilities for Django applications',
       author='James Bennett',
       author_email='james@b-list.org',

@@ -67,7 +67,7 @@ objects (randomly selected).
 
 Syntax::
 
-    {% get_random_object [app_name].[model_name] as [varname] %}
+    {% get_random_object [app_name].[model_name] [num] as [varname] %}
 
 
 ``retrieve_object``
